@@ -2,7 +2,7 @@
 
 # Aplicações da Altimetria de Satélite em Oceanografia Física – IOF 834
 
-     Exercício 01 – Processamento de Dados Gradeados
+Exercício 01 – Processamento de Dados Gradeados
 
 **Curso de pós-graduação:** Oceanografia  
 **Área de concentração:** Oceanografia Física  
