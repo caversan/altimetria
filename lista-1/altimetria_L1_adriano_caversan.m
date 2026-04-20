@@ -6,14 +6,17 @@
 
 clear all; close all; clc
 
+%% Variaveis de caminho para dados e plots
+path_data = 'data/';
+path_plots = 'plots/';
+
 %% Exercicio 1: Escolha da area oceanica
 % Area selecionada: Atlantico Sul, costa brasileira
-% Latitude -24.94 a -0.06, Longitude -44.94 a -25.06
+% Latitude -20 a 0, Longitude -45 a -20
 
-path_data = 'data/';
-file_adt = [path_data 'cmems_obs-sl_glo_phy-ssh_nrt_allsat-l4-duacs-0.125deg_P1D_1776647219637.nc'];
-file_swh = [path_data 'cmems_obs-wave_glo_phy-swh_nrt_multi-l4-2deg_P1D-i_1776647181069.nc'];
-path_plots = 'plots/';
+file_adt = [path_data 'cmems_obs-sl_glo_phy-ssh_nrt_allsat-l4-duacs-0.125deg_P1D_1776724281453.nc'];
+file_swh = [path_data 'cmems_obs-wave_glo_phy-swh_nrt_multi-l4-2deg_P1D-i_1776724519319.nc'];
+
 
 %% Exercicio 2: Selecao de dados gradeados diarios multi-satelite
 % Leitura ADT e correntes geostroficas do arquivo de altimetria
@@ -48,10 +51,6 @@ fprintf('Area selecionada: Lat %.2f to %.2f, Lon %.2f to %.2f\n', lat_min, lat_m
 
 % VEGEO a partir de ugosa e vgosa, como no material de aula de UV
 vegeo = sqrt(ugosa.^2 + vgosa.^2);
-
-save('dados_processados_L1.mat', 'adt', 'swh', 'ugosa', 'vgosa', 'vegeo', ...
-    'lat_adt', 'lon_adt', 'lat_swh', 'lon_swh', 'time_dates_adt', 'time_dates_swh', '-v7.3')
-fprintf('Dados processados salvos em dados_processados_L1.mat\n')
 
 %% Exercicio 3: Processamento mensal e analise de mapas
 months = 1:12;
