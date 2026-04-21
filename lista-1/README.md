@@ -1,89 +1,124 @@
-# Universidade de São Paulo - Instituto de Oceanografia - IOUSP
+# Lista 1 - Processamento de Dados Gradeados
 
-# Aplicações da Altimetria de Satélite em Oceanografia Física – IOF 834
+Projeto da disciplina **Aplicacoes da Altimetria de Satelite em Oceanografia Fisica** (IOUSP), dedicado ao processamento de dados gradeados diarios de **ADT**, **SWH** e **VEGEO** para uma area do Atlantico Sul na costa brasileira ao longo de **2025**.
 
-Exercício 01 – Processamento de Dados Gradeados
+Este diretorio reune o script MATLAB, o relatorio final e os graficos produzidos para os exercicios da lista. A documentacao detalhada das figuras esta em [ANALISE_GRAFICOS.md](ANALISE_GRAFICOS.md).
 
-**Curso de pós-graduação:** Oceanografia  
-**Área de concentração:** Oceanografia Física  
- 
-**Curso de Especialização:** Medição, Análise, Previsão e Modelagem do Nível do Mar 
-**Módulo:** APLICAÇÕES DE ALTIMETRIA DE SATÉLITE EM OCEANOGRAFIA FÍSICA - IOF 5834
-**Disciplina:** Altimetria  
-**Período:** 1º Semestre de 2026 
- 
-**Aluno:** Adriano Caversan
-**Professor:** Joseph Harari
+## Contexto
 
+- **Instituicao:** Universidade de Sao Paulo - Instituto de Oceanografia
+- **Curso:** Medicao, Analise, Previsao e Modelagem do Nivel do Mar
+- **Disciplina:** Altimetria
+- **Periodo:** 1o semestre de 2026
+- **Aluno:** Adriano Caversan
+- **Professor:** Joseph Harari
 
-### Objetivo
-Este exercício orienta o processamento e a análise de dados gradeados diários multi-satélite referentes a ADT, SWH e VEGEO para um domínio oceânico específico.
+## Objetivo da atividade
 
-### Requisitos
-1. Cada aluno deverá escolher uma área de qualquer região oceânica, de 20º em latitude por 25º em longitude, incluindo uma parte terrestre para referência.
+O trabalho tem cinco frentes principais:
 
-2. Para essa área, selecionar dados gradeados diários multi-satélite do ano completo de 2025, referentes a:
-   - **ADT** – absolute dynamic topography
-   - **SWH** – significant wave height
-   - **VEGEO** – geostrophic velocity
-3. Processar os dados de ADT, SWH e VEGEO para obtenção de mapas mensais dos valores médios e seus desvios padrão. Analisar os mapas em termos de variações espaciais e temporais dos parâmetros estatísticos.
-4.  Escolher um ponto geográfico do domínio e analisar as séries temporais diárias de ADT, SWH e VEGEO, do ano completo de 2025, por métodos estatístico e espectral.
+1. Selecionar um dominio oceanico com parte continental de referencia.
+2. Ler dados gradeados diarios multi-satelite de ADT e SWH para 2025.
+3. Gerar mapas mensais de media e desvio padrao para ADT, SWH e VEGEO.
+4. Analisar, em um ponto do dominio, as series temporais, os histogramas e os espectros.
+5. Construir um diagrama longitude x tempo x ADT para uma secao zonal.
 
-5. Escolher uma secção zonal no domínio e elaborar um diagrama longitude x tempo x ADT para o ano completo de 2025. Alternativamente, pode ser considerado um diagrama latitude x tempo x ADT. Analisar o diagrama obtido.
+## Recorte espacial e dados utilizados
 
-> Nota: caso não sejam disponíveis dados do ano completo de 2025 de SWH, ADT ou VEGEO, podem ser utilizados dados de um ano anterior completo.
+- **Regiao:** Atlantico Sul, costa brasileira
+- **Dominio aproximado:** latitude `-19.94` a `-0.06` e longitude `-44.94` a `-20.06`
+- **Ponto nominal da analise temporal:** longitude `-35.0`, latitude `-12.5`
+- **Ponto de grade ADT/VEGEO mais proximo:** `35.0625 W, 12.5625 S`
+- **Ponto de grade SWH mais proximo:** `35 W, 13 S`
 
-## Implementação
+Arquivos de entrada:
 
-### Área Selecionada
-- **Região:** Atlântico Sul, costa brasileira
-- **Coordenadas:** Latitude -24.94° a -0.06°, Longitude -44.94° a -25.06°
-- **Dimensões aproximadas:** 25° lat × 20° lon (incluindo referência terrestre)
+- `data/cmems_obs-sl_glo_phy-ssh_nrt_allsat-l4-duacs-0.125deg_P1D_1776724281453.nc`
+- `data/cmems_obs-wave_glo_phy-swh_nrt_multi-l4-2deg_P1D-i_1776724519319.nc`
 
-### Dados Utilizados
-- **ADT (Absolute Dynamic Topography):** Arquivo `data/cmems_obs-sl_glo_phy-ssh_nrt_allsat-l4-duacs-0.125deg_P1D_1776647219637.nc`
-- **SWH (Significant Wave Height):** Arquivo `data/cmems_obs-wave_glo_phy-swh_nrt_multi-l4-2deg_P1D-i_1776647181069.nc` (interpolado para grid ADT)
-- **VEGEO (Geostrophic Velocity):** Derivado de ADT usando equações geostróficas
+## Como o script funciona
 
-### Script Principal
-- **Arquivo:** `altimetria_L1_adriano_caversan.m`
-- **Linguagem:** MATLAB
-- **Funcionalidades:**
-  - Leitura e processamento de dados NetCDF
-  - Interpolação de SWH para grid ADT
-  - Cálculo de velocidades geostróficas
-  - Geração de estatísticas mensais
-  - Plots de mapas, séries temporais e diagramas espaço-temporais
+O arquivo principal [altim_L1_adriano_caversan.m](altim_L1_adriano_caversan.m) executa o fluxo completo:
 
-## Arquivos Gerados
+1. Le o ADT, as componentes `ugosa` e `vgosa`, e o campo de SWH a partir de arquivos NetCDF.
+2. Converte os tempos para `datetime` e define a grade de cada produto.
+3. Calcula `VEGEO = sqrt(ugosa.^2 + vgosa.^2)`, isto e, o modulo da velocidade geostrofica.
+4. Separa os dados por mes e calcula medias e desvios padrao mensais com `nanmean` e `nanstd`.
+5. Gera mapas mensais para ADT, SWH e VEGEO.
+6. Extrai as series diarias no ponto selecionado.
+7. Preenche falhas em SWH no ponto com interpolacao linear ao longo do tempo.
+8. Calcula tendencia linear, histograma e espectro de Fourier para cada variavel.
+9. Monta o diagrama longitude x tempo x ADT na latitude `-12.5`.
 
-### Dados Processados
-- `dados_processados_L1.mat`: Arquivo MATLAB contendo as matrizes ADT, SWH e VEGEO processadas
+Observacao importante: o script atual **nao interpola o SWH para a grade do ADT**. Cada variavel e tratada no seu proprio grid.
 
-### Imagens (Pasta `plots/`)
-- `adt_mes_1.png` a `adt_mes_12.png`: Mapas mensais de média e desvio padrão de ADT
-- `series_temporais_ponto.png`: Séries temporais diárias de ADT, SWH e VEGEO no ponto central
-- `espectro_adt.png`: Análise espectral (FFT) da série temporal de ADT
-- `diagrama_lon_tempo_adt.png`: Diagrama longitude × tempo × ADT na latitude média
+## Estrutura da pasta
 
-## Resultados Principais
+- [altim_L1_adriano_caversan.m](altim_L1_adriano_caversan.m): script principal em MATLAB
+- [altim_L1_adriano_caversan.pdf](altim_L1_adriano_caversan.pdf): relatorio final
+- [altim_L1_adriano_caversan.docx](altim_L1_adriano_caversan.docx): versao editavel do relatorio
+- [ANALISE_GRAFICOS.md](ANALISE_GRAFICOS.md): leitura comentada das figuras
+- `data/`: arquivos NetCDF utilizados
+- `plots/`: saidas graficas geradas pelo script
+- `lista-original/`: enunciado original da atividade
 
-### Estatísticas no Ponto Central (-12.56° lat, -35.06° lon)
-- **ADT:** Média 0.617 m, Desvio padrão 0.029 m
-- **SWH:** Média 1.764 m, Desvio padrão 0.455 m
-- **VEGEO:** Média 0.088 m/s, Desvio padrão 0.052 m/s
+## Produtos gerados
 
-### Análises
-- **Mapas Mensais:** Revelam variações sazonais em ADT, com maiores alturas no inverno austral (junho-agosto)
-- **Séries Temporais:** Mostram variabilidade sazonal e interdiária
-- **Análise Espectral:** Indica componentes anuais e semanais na variabilidade de ADT
-- **Diagrama Espaço-Temporal:** Sugere propagação zonal de anomalias, possivelmente ondas de Rossby
+O diretorio `plots/` contem **46 figuras**:
 
-## Como Executar
-1. Certifique-se de que MATLAB está instalado
-2. Execute o script: `run('altimetria_L1_adriano_caversan.m')`
-3. As imagens serão salvas automaticamente na pasta `plots/`
+- `12` mapas mensais de ADT
+- `12` mapas mensais de SWH
+- `12` mapas mensais de VEGEO
+- `9` graficos de ponto fixo
+- `1` diagrama longitude x tempo x ADT
 
-## Dependências
-- MATLAB com toolbox NetCDF
-- Arquivos de dados em `data/` (não incluídos no repositório devido ao tamanho)
+## Destaques dos resultados
+
+Com base no script e no relatorio final:
+
+- **ADT no ponto analisado:** media de `0.617 m` e desvio padrao de `0.029 m`
+- **SWH no ponto analisado:** media de `1.776 m` e desvio padrao de `0.466 m`
+- **VEGEO no ponto analisado:** media de `0.086 m/s` e desvio padrao de `0.050 m/s`
+
+Interpretacoes gerais:
+
+- A **ADT** apresenta valores mais altos junto a costa e menores em direcao ao oceano aberto.
+- O **SWH** mostra variabilidade mais forte que ADT no ponto escolhido e um gradiente espacial marcante entre costa e mar aberto.
+- O **VEGEO** evidencia correntes mais intensas perto da costa e em faixas de maior dinamica no dominio.
+- O diagrama longitude x tempo reforca o contraste costa-oceano e a modulacao sazonal do campo de ADT.
+
+## Previa visual
+
+### ADT em julho
+
+![Mapa mensal de ADT em julho](plots/adt_mes_7.png)
+
+### SWH em julho
+
+![Mapa mensal de SWH em julho](plots/swh_mes_7.png)
+
+### VEGEO em julho
+
+![Mapa mensal de VEGEO em julho](plots/vegeo_mes_7.png)
+
+### Diagrama longitude x tempo x ADT
+
+![Diagrama longitude x tempo x ADT](plots/diagrama_lon_tempo_adt.png)
+
+## Como executar
+
+1. Abra o MATLAB no diretorio `lista-1`.
+2. Garanta que os arquivos NetCDF estejam presentes em `data/`.
+3. Execute:
+
+```matlab
+run('altim_L1_adriano_caversan.m')
+```
+
+4. As figuras serao gravadas automaticamente em `plots/`.
+
+## Leitura complementar
+
+- [Analise detalhada dos graficos](ANALISE_GRAFICOS.md)
+- [Relatorio final em PDF](altim_L1_adriano_caversan.pdf)
+- [Enunciado original](lista-original/exerc_01_altim_2026.pdf)
