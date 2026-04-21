@@ -19,6 +19,7 @@ file_swh = [path_data 'cmems_obs-wave_glo_phy-swh_nrt_multi-l4-2deg_P1D-i_177672
 
 
 %% Exercicio 2: Selecao de dados gradeados diarios multi-satelite
+
 % Leitura ADT e correntes geostroficas do arquivo de altimetria
 lat_adt = ncread(file_adt, 'latitude');
 lon_adt = ncread(file_adt, 'longitude');
@@ -81,7 +82,7 @@ for m = months
     axis equal
     xlabel('LONGITUDE', 'fontsize', 14)
     ylabel('LATITUDE', 'fontsize', 14)
-    title(['adt 2025 sel - media MES ' monthNames{m}], 'fontsize', 14)
+    title(['adt 2025 sel - media MES ' monthNames{m} ' (m)'], 'fontsize', 14)
     grid on
     colorbar('fontsize', 14)
 
@@ -91,7 +92,7 @@ for m = months
     axis equal
     xlabel('LONGITUDE', 'fontsize', 14)
     ylabel('LATITUDE', 'fontsize', 14)
-    title(['adt 2025 sel - despa MES ' monthNames{m}], 'fontsize', 14)
+    title(['adt 2025 sel - despa MES ' monthNames{m} ' (m)'], 'fontsize', 14)
     grid on
     colorbar('fontsize', 14)
 
@@ -107,7 +108,7 @@ for m = months
     axis equal
     xlabel('LONGITUDE', 'fontsize', 14)
     ylabel('LATITUDE', 'fontsize', 14)
-    title(['swh 2025 sel - media MES ' monthNames{m}], 'fontsize', 14)
+    title(['swh 2025 sel - media MES ' monthNames{m} ' (m)'], 'fontsize', 14)
     grid on
     colorbar('fontsize', 14)
 
@@ -117,7 +118,7 @@ for m = months
     axis equal
     xlabel('LONGITUDE', 'fontsize', 14)
     ylabel('LATITUDE', 'fontsize', 14)
-    title(['swh 2025 sel - despa MES ' monthNames{m}], 'fontsize', 14)
+    title(['swh 2025 sel - despa MES ' monthNames{m} ' (m)'], 'fontsize', 14)
     grid on
     colorbar('fontsize', 14)
 
@@ -133,7 +134,7 @@ for m = months
     axis equal
     xlabel('LONGITUDE', 'fontsize', 14)
     ylabel('LATITUDE', 'fontsize', 14)
-    title(['vegeo 2025 sel - media MES ' monthNames{m}], 'fontsize', 14)
+    title(['vegeo 2025 sel - media MES ' monthNames{m} ' (m/s)'], 'fontsize', 14)
     grid on
     colorbar('fontsize', 14)
 
@@ -143,7 +144,7 @@ for m = months
     axis equal
     xlabel('LONGITUDE', 'fontsize', 14)
     ylabel('LATITUDE', 'fontsize', 14)
-    title(['vegeo 2025 sel - despa MES ' monthNames{m}], 'fontsize', 14)
+    title(['vegeo 2025 sel - despa MES ' monthNames{m} ' (m/s)'], 'fontsize', 14)
     grid on
     colorbar('fontsize', 14)
 
