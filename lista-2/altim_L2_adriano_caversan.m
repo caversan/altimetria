@@ -99,9 +99,9 @@ for nlat=1:nulat
 end
 longrid=grade(:,2); latgrid=grade(:,3); codgrid=grade(:,4);
 
-fid=fopen('grid_tracks_adt.dat','w'); fprintf(fid,'%6i %10.4f %10.4f %6i\n',grade'); fclose(fid);
-fid=fopen('grid_tracks_swh.dat','w'); fprintf(fid,'%6i %10.4f %10.4f %6i\n',grade'); fclose(fid);
-fid=fopen('grid_tracks_wnd.dat','w'); fprintf(fid,'%6i %10.4f %10.4f %6i\n',grade'); fclose(fid);
+fid=fopen([path_proc 'grid_tracks_adt.dat'],'w'); fprintf(fid,'%6i %10.4f %10.4f %6i\n',grade'); fclose(fid);
+fid=fopen([path_proc 'grid_tracks_swh.dat'],'w'); fprintf(fid,'%6i %10.4f %10.4f %6i\n',grade'); fclose(fid);
+fid=fopen([path_proc 'grid_tracks_wnd.dat'],'w'); fprintf(fid,'%6i %10.4f %10.4f %6i\n',grade'); fclose(fid);
 
 longrid2=reshape(longrid,nulon,nulat);
 latgrid2=reshape(latgrid,nulon,nulat);

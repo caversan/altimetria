@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed -n 7p __TRACKED_VAR__/__TRACKED_VAR__)",
+      "Bash(grep -v \"^$\")",
+      "Bash(awk -F',' '{print $1}')",
+      "Bash(git push *)",
+      "Bash(ssh *)",
+      "Bash(git config *)",
+      "Bash(chmod 600 /c/Users/adrca/.ssh/id_ed25519)",
+      "Bash(chmod 644 /c/Users/adrca/.ssh/id_ed25519.pub)",
+      "PowerShell(icacls $keyPath /inheritance:r /grant:r \"CAVERSAN\\\\adrca:F\" /remove \"AUTORIDADE NT\\\\SISTEMA\" /remove \"BUILTIN\\\\Administradores\" 2>&1)",
+      "PowerShell($keyPath = \"C:\\\\Users\\\\adrca\\\\.ssh\\\\id_ed25519\")",
+      "Bash(ssh-keygen -y -f /c/Users/adrca/.ssh/id_ed25519)",
+      "Bash(xxd)",
+      "PowerShell(\\(Get-Acl \"C:\\\\Users\\\\adrca\\\\.ssh\\\\id_ed25519\"\\).Access | Select-Object IdentityReference, FileSystemRights, AccessControlType)",
+      "Bash(git rm *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
