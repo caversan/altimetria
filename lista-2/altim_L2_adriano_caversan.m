@@ -14,15 +14,17 @@ clear all; close all; clc
 %  CONFIGURACOES GERAIS
 % ================================================================
 
-path_plots = 'plots/';
-path_adt   = 'grafs_tabs_adt/';
-path_swh   = 'grafs_tabs_swh/';
-path_wnd   = 'grafs_tabs_wnd/';
-dp         = 'data/';
+path_plots  = 'plots/';
+path_proc   = 'processed-data/';
+path_adt    = [path_proc 'grafs_tabs_adt/'];
+path_swh    = [path_proc 'grafs_tabs_swh/'];
+path_wnd    = [path_proc 'grafs_tabs_wnd/'];
+path_correl = [path_proc 'correl/'];
+dp          = 'data/';
 
 for p = {path_plots,[path_plots 'ex1'],[path_plots 'ex2'], ...
          [path_plots 'ex3'],[path_plots 'ex4'],[path_plots 'ex5'], ...
-         path_adt, path_swh, path_wnd}
+         path_proc, path_adt, path_swh, path_wnd, path_correl}
     if ~exist(p{1},'dir'), mkdir(p{1}); end
 end
 
@@ -131,14 +133,22 @@ fprintf('  Grade %dx%d=%d pontos. Figura salva em plots/ex1/\n',nulon,nulat,nugr
 fprintf('\n=== EXERCICIO 2: Selecao de dados along-track ===\n');
 
 fprintf('\n--- ADT (7 satelites) ---\n');
-figure; hold on
-title('Trajetorias ADT - todos satelites - Fev(azul) Ago(verm)','FontSize',11)
-xlabel('LONGITUDE'); ylabel('LATITUDE')
+
+% Figuras combinadas: todos os satelites, fevereiro e agosto separados
+fig_adt_fev=figure; hold on
+title('TRAJETORIAS ADT - todos satelites - Fevereiro 2025','fontsize',11)
+xlabel('LONGITUDE','fontsize',12); ylabel('LATITUDE','fontsize',12)
 axis([lonmin lonmax latmin latmax]); grid on
+
+fig_adt_ago=figure; hold on
+title('TRAJETORIAS ADT - todos satelites - Agosto 2025','fontsize',11)
+xlabel('LONGITUDE','fontsize',12); ylabel('LATITUDE','fontsize',12)
+axis([lonmin lonmax latmin latmax]); grid on
+
 
 for isat=1:numsats_adt
     nome=arq_adt{isat,2}; arq=arq_adt{isat,1}; tem_mdt=arq_adt{isat,3};
-    fprintf('  Sat %d (%s)... ',isat,nome);
+    fprintf('  %s... ',upper(nome));
     T=readtable(arq,'CommentStyle','#','Delimiter',',');
     if tem_mdt
         mk=strcmp(T.parameter,'mdt'); ms=strcmp(T.parameter,'sla_filtered');
@@ -162,9 +172,40 @@ for isat=1:numsats_adt
         adt_v(ip&adt_v>me+5*dp_v)=me+5*dp_v;
         adt_v(ip&isnan(adt_v))=me;
     end
-    ifp=time_v>=fev_p1&time_v<=fev_p2; iap=time_v>=ago_p1&time_v<=ago_p2;
-    plot(lon_v(ifp),lat_v(ifp),'+b','MarkerSize',2)
-    plot(lon_v(iap),lat_v(iap),'+r','MarkerSize',2)
+    ifp=time_v>=fev_p1&time_v<=fev_p2;
+    iap=time_v>=ago_p1&time_v<=ago_p2;
+
+    % Figura individual - Fevereiro
+    if sum(ifp)>0
+        figure
+        plot(lon_v(ifp),lat_v(ifp),'+b','MarkerSize',2)
+        axis([lonmin lonmax latmin latmax]); grid on
+        xlabel('LONGITUDE','fontsize',12); ylabel('LATITUDE','fontsize',12)
+        title(['TRAJETORIAS ADT - ' upper(nome) ' - Fevereiro 2025'],'fontsize',12)
+        print('-dpng',[path_plots 'ex2/trajet_adt_' nome '_fev2025']); close
+    end
+
+    % Figura individual - Agosto
+    if sum(iap)>0
+        figure
+        plot(lon_v(iap),lat_v(iap),'+r','MarkerSize',2)
+        axis([lonmin lonmax latmin latmax]); grid on
+        xlabel('LONGITUDE','fontsize',12); ylabel('LATITUDE','fontsize',12)
+        title(['TRAJETORIAS ADT - ' upper(nome) ' - Agosto 2025'],'fontsize',12)
+        print('-dpng',[path_plots 'ex2/trajet_adt_' nome '_ago2025']); close
+    end
+
+    % Adicionar nas figuras combinadas (cor unica por mes)
+    if sum(ifp)>0
+        figure(fig_adt_fev)
+        plot(lon_v(ifp),lat_v(ifp),'+r','MarkerSize',2)
+    end
+    if sum(iap)>0
+        figure(fig_adt_ago)
+        plot(lon_v(iap),lat_v(iap),'+b','MarkerSize',2)
+    end
+
+    % Salvar arquivos DAT
     for ngrid=1:nugrid
         diflat=abs(lat_v-latgrid(ngrid));
         diflon=abs(lon_v-longrid(ngrid));
@@ -179,17 +220,31 @@ for isat=1:numsats_adt
     end
     fprintf('OK (%d dados)\n',sum(idx));
 end
-print('-dpng',[path_plots 'ex2/trajet_adt_todos']); close
+
+% Salvar figuras combinadas ADT
+figure(fig_adt_fev)
+print('-dpng',[path_plots 'ex2/trajet_adt_todos_fev2025']); close
+
+figure(fig_adt_ago)
+print('-dpng',[path_plots 'ex2/trajet_adt_todos_ago2025']); close
 
 fprintf('\n--- SWH e WIND (9 satelites) ---\n');
-figure; hold on
-title('Trajetorias SWH/WIND - todos satelites - Fev(azul) Ago(verm)','FontSize',11)
-xlabel('LONGITUDE'); ylabel('LATITUDE')
+
+% Figuras combinadas: todos os satelites, fevereiro e agosto separados
+fig_swh_fev=figure; hold on
+title('TRAJETORIAS SWH/WIND - todos satelites - Fevereiro 2025','fontsize',11)
+xlabel('LONGITUDE','fontsize',12); ylabel('LATITUDE','fontsize',12)
 axis([lonmin lonmax latmin latmax]); grid on
+
+fig_swh_ago=figure; hold on
+title('TRAJETORIAS SWH/WIND - todos satelites - Agosto 2025','fontsize',11)
+xlabel('LONGITUDE','fontsize',12); ylabel('LATITUDE','fontsize',12)
+axis([lonmin lonmax latmin latmax]); grid on
+
 
 for isat=1:numsats_swh
     nome=arq_swh{isat,2}; arq=arq_swh{isat,1};
-    fprintf('  Sat %d (%s)... ',isat,nome);
+    fprintf('  %s... ',upper(nome));
     T=readtable(arq,'CommentStyle','#','Delimiter',',');
     mw=strcmp(T.parameter,'VAVH'); mv=strcmp(T.parameter,'WIND_SPEED');
     if sum(mw)==0||sum(mv)==0, fprintf('sem dados\n'); continue; end
@@ -210,9 +265,40 @@ for isat=1:numsats_swh
         swh_v(ip&swh_v<ms2-5*ds)=ms2-5*ds; swh_v(ip&swh_v>ms2+5*ds)=ms2+5*ds; swh_v(ip&isnan(swh_v))=ms2;
         wnd_v(ip&wnd_v<mw2-5*dw)=mw2-5*dw; wnd_v(ip&wnd_v>mw2+5*dw)=mw2+5*dw; wnd_v(ip&isnan(wnd_v))=mw2;
     end
-    ifp=time_v>=fev_p1&time_v<=fev_p2; iap=time_v>=ago_p1&time_v<=ago_p2;
-    plot(lon_v(ifp),lat_v(ifp),'+b','MarkerSize',2)
-    plot(lon_v(iap),lat_v(iap),'+r','MarkerSize',2)
+    ifp=time_v>=fev_p1&time_v<=fev_p2;
+    iap=time_v>=ago_p1&time_v<=ago_p2;
+
+    % Figura individual - Fevereiro
+    if sum(ifp)>0
+        figure
+        plot(lon_v(ifp),lat_v(ifp),'+b','MarkerSize',2)
+        axis([lonmin lonmax latmin latmax]); grid on
+        xlabel('LONGITUDE','fontsize',12); ylabel('LATITUDE','fontsize',12)
+        title(['TRAJETORIAS SWH/WIND - ' upper(nome) ' - Fevereiro 2025'],'fontsize',12)
+        print('-dpng',[path_plots 'ex2/trajet_swh_wnd_' nome '_fev2025']); close
+    end
+
+    % Figura individual - Agosto
+    if sum(iap)>0
+        figure
+        plot(lon_v(iap),lat_v(iap),'+r','MarkerSize',2)
+        axis([lonmin lonmax latmin latmax]); grid on
+        xlabel('LONGITUDE','fontsize',12); ylabel('LATITUDE','fontsize',12)
+        title(['TRAJETORIAS SWH/WIND - ' upper(nome) ' - Agosto 2025'],'fontsize',12)
+        print('-dpng',[path_plots 'ex2/trajet_swh_wnd_' nome '_ago2025']); close
+    end
+
+    % Adicionar nas figuras combinadas (cor unica por mes)
+    if sum(ifp)>0
+        figure(fig_swh_fev)
+        plot(lon_v(ifp),lat_v(ifp),'+r','MarkerSize',2)
+    end
+    if sum(iap)>0
+        figure(fig_swh_ago)
+        plot(lon_v(iap),lat_v(iap),'+b','MarkerSize',2)
+    end
+
+    % Salvar arquivos DAT
     for ngrid=1:nugrid
         diflat=abs(lat_v-latgrid(ngrid));
         diflon=abs(lon_v-longrid(ngrid));
@@ -231,7 +317,13 @@ for isat=1:numsats_swh
     end
     fprintf('OK (%d dados)\n',sum(idx));
 end
-print('-dpng',[path_plots 'ex2/trajet_swh_wnd_todos']); close
+
+% Salvar figuras combinadas SWH/WIND
+figure(fig_swh_fev)
+print('-dpng',[path_plots 'ex2/trajet_swh_wnd_todos_fev2025']); close
+
+figure(fig_swh_ago)
+print('-dpng',[path_plots 'ex2/trajet_swh_wnd_todos_ago2025']); close
 
 fprintf('\n  Exercicio 2 concluido.\n');
 
@@ -608,7 +700,7 @@ for imes=1:2
         axis equal
         xlabel('LONGITUDE','fontsize',14)
         ylabel('LATITUDE','fontsize',14)
-        title([upper(nome_v) ' (' unid ') sel - media DIAS ' num2str(time(ind_tempo_ini)) ' A ' num2str(time(ind_tempo_fim))],'fontsize',14)
+        title([upper(nome_v) ' (' unid ') - ' label_mes ' - media DIAS ' num2str(time(ind_tempo_ini)) ' A ' num2str(time(ind_tempo_fim))],'fontsize',14)
         grid on
         colorbar('fontsize',14);
         print('-dpng',[path_plots 'ex3/' nome_v '_sel_dias_media_' nome_mes]);
@@ -621,7 +713,7 @@ for imes=1:2
         axis equal
         xlabel('LONGITUDE','fontsize',14)
         ylabel('LATITUDE','fontsize',14)
-        title([upper(nome_v) ' (' unid ') sel - despa DIAS ' num2str(time(ind_tempo_ini)) ' A ' num2str(time(ind_tempo_fim))],'fontsize',14)
+        title([upper(nome_v) ' (' unid ') - ' label_mes ' - despa DIAS ' num2str(time(ind_tempo_ini)) ' A ' num2str(time(ind_tempo_fim))],'fontsize',14)
         grid on
         colorbar('fontsize',14);
         print('-dpng',[path_plots 'ex3/' nome_v '_sel_dias_despa_' nome_mes]);
@@ -634,7 +726,7 @@ for imes=1:2
         axis equal
         xlabel('LONGITUDE','fontsize',14)
         ylabel('LATITUDE','fontsize',14)
-        title([upper(nome_v) ' (' unid ') sel - minimo DIAS ' num2str(time(ind_tempo_ini)) ' A ' num2str(time(ind_tempo_fim))],'fontsize',14)
+        title([upper(nome_v) ' (' unid ') - ' label_mes ' - minimo DIAS ' num2str(time(ind_tempo_ini)) ' A ' num2str(time(ind_tempo_fim))],'fontsize',14)
         grid on
         colorbar('fontsize',14);
         print('-dpng',[path_plots 'ex3/' nome_v '_sel_dias_min_' nome_mes]);
@@ -647,7 +739,7 @@ for imes=1:2
         axis equal
         xlabel('LONGITUDE','fontsize',14)
         ylabel('LATITUDE','fontsize',14)
-        title([upper(nome_v) ' (' unid ') sel - maximo DIAS ' num2str(time(ind_tempo_ini)) ' A ' num2str(time(ind_tempo_fim))],'fontsize',14)
+        title([upper(nome_v) ' (' unid ') - ' label_mes ' - maximo DIAS ' num2str(time(ind_tempo_ini)) ' A ' num2str(time(ind_tempo_fim))],'fontsize',14)
         grid on
         colorbar('fontsize',14);
         print('-dpng',[path_plots 'ex3/' nome_v '_sel_dias_max_' nome_mes]);
@@ -750,7 +842,9 @@ for imes=1:2
         title(sprintf('%s   r=%.2f  p=%.3f',pares_t{kp},cr,pv),'fontsize',9)
         fprintf('    %-18s %8.3f %8.4f %8.4f %8.3f %7.3f\n',pares_t{kp},cr,rmse,bias,sk,pv);
     end
-    sgtitle(['Scatter plots - ' label_mes],'fontsize',12)
+    sgtitle({'Scatter plots - ' label_mes, ...
+             ['Pto1: lon=' num2str(longrid(pto1)) ' lat=' num2str(latgrid(pto1)) ...
+              '     Pto2: lon=' num2str(longrid(pto2)) ' lat=' num2str(latgrid(pto2))]},'fontsize',12)
     print('-dpng',[path_plots 'ex4/scatter_' nome_mes]); close
 
     % --- Correlacoes cruzadas com atrasos (relacoes cruzadas) ---
@@ -777,7 +871,9 @@ for imes=1:2
         text(0.05,0.88,sprintf('max|r|=%.2f  lag=%.1fd',mx,lag_max),...
              'Units','normalized','fontsize',8,'Color','r')
     end
-    sgtitle(['Correlacoes cruzadas com atrasos - ' label_mes],'fontsize',12)
+    sgtitle({'Correlacoes cruzadas com atrasos - ' label_mes, ...
+             ['Pto1: lon=' num2str(longrid(pto1)) ' lat=' num2str(latgrid(pto1)) ...
+              '     Pto2: lon=' num2str(longrid(pto2)) ' lat=' num2str(latgrid(pto2))]},'fontsize',12)
     print('-dpng',[path_plots 'ex4/xcorr_' nome_mes]); close
 end
 
@@ -805,6 +901,33 @@ for imes=1:2
     end
     nudad=size(adt_mat,1);
 
+    % Preencher NaN por interpolacao linear dos vizinhos (prog_10 style)
+    % Para cada ponto de grade, coleta os indices validos e interpola
+    for ngrid=1:nugrid
+        for imat=1:3
+            if imat==1, serie=adt_mat(:,ngrid);
+            elseif imat==2, serie=swh_mat(:,ngrid);
+            else, serie=wnd_mat(:,ngrid); end
+            indice=0;
+            tempo_val=[]; valor_val=[];
+            for ntime=1:nudad
+                if ~isnan(serie(ntime))
+                    indice=indice+1;
+                    tempo_val(indice)=ntime;
+                    valor_val(indice)=serie(ntime);
+                end
+            end
+            if indice>1
+                serie=interp1(tempo_val,valor_val,1:nudad,'linear','extrap')';
+            elseif indice==1
+                serie(:)=valor_val(1);
+            end
+            if imat==1, adt_mat(:,ngrid)=serie;
+            elseif imat==2, swh_mat(:,ngrid)=serie;
+            else, wnd_mat(:,ngrid)=serie; end
+        end
+    end
+
     vars5_mat={adt_mat, swh_mat, wnd_mat};
     vars5_nome={'adt','swh','wnd'};
 
@@ -812,6 +935,7 @@ for imes=1:2
 
     for ipto=1:2
         kreferen=ptos_arr(ipto);
+        label_pto=['Pto' num2str(ipto) ' (lon=' num2str(longrid(kreferen)) ' lat=' num2str(latgrid(kreferen)) ')'];
 
         for ivar=1:3
             mat_v=vars5_mat{ivar}; nome_v=vars5_nome{ivar};
@@ -853,10 +977,10 @@ for imes=1:2
             axis equal
             xlabel('LONGITUDE','fontsize',14)
             ylabel('LATITUDE','fontsize',14)
-            title(['CORREL sel - referen pto ',num2str(kreferen)],'fontsize',14)
+            title(['CORREL ' upper(nome_v) ' - referen ' label_pto],'fontsize',14)
             grid on
             colorbar('fontsize',14);
-            print('-dpng',[path_plots 'ex5/' nome_v '_correl_pto_ref_' num2str(kreferen) '_' nome_mes]);
+            print('-dpng',[path_plots 'ex5/' nome_v '_correl_pto' num2str(ipto) '_' nome_mes]);
 
             % mapa de significancia
             figure
@@ -865,10 +989,10 @@ for imes=1:2
             axis equal
             xlabel('LONGITUDE','fontsize',14)
             ylabel('LATITUDE','fontsize',14)
-            title(['SIGNIF CORREL (p<0.05) sel - referen pto ',num2str(kreferen)],'fontsize',14)
+            title(['SIGNIF CORREL (p<0.05) ' upper(nome_v) ' - referen ' label_pto],'fontsize',14)
             grid on
             colorbar('fontsize',14);
-            print('-dpng',[path_plots 'ex5/' nome_v '_signif_pto_ref_' num2str(kreferen) '_' nome_mes]);
+            print('-dpng',[path_plots 'ex5/' nome_v '_signif_pto' num2str(ipto) '_' nome_mes]);
 
             % mapa de skill
             figure
@@ -877,17 +1001,17 @@ for imes=1:2
             axis equal
             xlabel('LONGITUDE','fontsize',14)
             ylabel('LATITUDE','fontsize',14)
-            title(['SKILL sel - referen pto ',num2str(kreferen)],'fontsize',14)
+            title(['SKILL ' upper(nome_v) ' - referen ' label_pto],'fontsize',14)
             grid on
             colorbar('fontsize',14);
-            print('-dpng',[path_plots 'ex5/' nome_v '_skill_pto_ref_' num2str(kreferen) '_' nome_mes]);
+            print('-dpng',[path_plots 'ex5/' nome_v '_skill_pto' num2str(ipto) '_' nome_mes]);
 
             % gravacao de resultados (prog05 style)
             for ngrid=1:nugrid
                 result_correl(ngrid,1:6)=[ngrid longrid(ngrid) latgrid(ngrid) ...
                     coefic_correl(ngrid) signifcc(ngrid) skill(ngrid)];
             end
-            arq_estat=[path_plots 'ex5/' nome_v '_correl_skill_pto_ref_' num2str(kreferen) '_' nome_mes '.dat'];
+            arq_estat=[path_correl nome_v '_correl_skill_pto' num2str(ipto) '_' nome_mes '.dat'];
             fid=fopen(arq_estat,'w');
             fprintf(fid,'%6i %10.4f %10.4f %10.4f %10.4f %10.4f \n',result_correl');
             fclose(fid);
