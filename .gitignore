@@ -3,12 +3,6 @@ material-aula/
 lista-1/data/
 lista-2/data/
 
-# Saidas geradas pelo script (regeneraveis)
-lista-2/plots/
-lista-2/processed-data/
-lista-2/grid_tracks_*.dat
-
-
 # MATLAB
 # Compiled code and binary files
 *.mexw64
