@@ -1,0 +1,28 @@
+APLICAÇÕES DA ALTIMETRIA DE SATÉLITE EM OCEANOGRAFIA FÍSICA –
+IOF 834
+EXERCÍCIO 02 – PROCESSAMENTO DE DADOS
+AO LONGO DE TRAJETÓRIAS
+1º SEMESTRE DE 2026
+
+1) Cada aluno deverá processar dados altimétricos, referentes à mesma região
+oceânica do exercício 01 do curso, de 20º em latitude por 25º em longitude,
+incluindo uma parte terrestre para referência.
+
+2) Para esta área, selecionar dados ao longo de trajetórias de oito satélites
+altimétricos, referentes a ADT (“absolute dynamic topography”), SWH
+(“significant wave height”) e WIND (“wind speed”), para os meses de
+fevereiro e agosto de 2025 (períodos de verão e inverno).
+
+3) Processar os dados de ADT, SWH e WIND, para obtenção de mapas
+mensais dos valores médios, desvios padrão, mínimos e máximos, a partir da
+formação de séries temporais em grade regular. Analisar os mapas, em
+termos de variações espaciais e temporais dos parâmetros estatísticos.
+
+4) Selecionar dois pontos geográficos do domínio e analisar comparativamente
+as séries temporais de ADT, SWH e WIND, para cada mês de dados, em
+termos de gráficos de espalhamento, parâmetros comparativos e relações
+cruzadas (com atrasos entre as séries). Discutir os resultados obtidos.
+
+5) Fazer análise de correlação entre os dados de ADT, SWH e WIND de cada
+ponto selecionado (na questão 4) com os demais pontos da grade regular,
+para cada mês de dados. Discutir os resultados obtidos. 
