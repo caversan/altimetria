@@ -11,51 +11,51 @@
 
 | Parâmetro | Produto CMEMS | Satélites |
 |---|---|---|
-| ADT (Topografia Dinâmica Absoluta) | SEALEVEL_GLO_PHY_L3_NRT_008_044 | AL, C2N, H2B, S3A, S3B, S6A-HR, SWON (7) |
-| SWH (Altura Significativa de Ondas) | WAVE_GLO_PHY_SWH_L3_NRT_014_001 | AL, C2, CFO, H2B, J3, S3A, S3B, S6A, SWON (9) |
-| WIND (Velocidade do Vento) | idem SWH | idem SWH (9) |
+| ADT – nível do mar absoluto (m) | SEALEVEL_GLO_PHY_L3_NRT_008_044 | AL, C2N, H2B, S3A, S3B, S6A-HR, SWON (7) |
+| SWH – altura das ondas (m) | WAVE_GLO_PHY_SWH_L3_NRT_014_001 | AL, C2, CFO, H2B, J3, S3A, S3B, S6A, SWON (9) |
+| WIND – velocidade do vento (m/s) | idem SWH | idem SWH (9) |
 
-**Período:** Fevereiro e Agosto de 2025  
+**Período:** Fevereiro e Agosto de 2025 (verão e inverno austrais)  
 **Região:** Atlântico Sul – costa brasileira (lat −20° a 0°, lon −45° a −20°)
 
 ---
 
 ## Exercício 1 – Região de Estudo e Grade Regular
 
-### Metodologia
+### O que foi feito
 
-A região de estudo abrange 20° de latitude por 25° de longitude no Atlântico Sul equatorial, incluindo parte da costa nordeste e leste do Brasil. Sobre essa região foi definida uma grade regular com espaçamento de 5° × 5°, totalizando 6 pontos em longitude (−45°, −40°, −35°, −30°, −25°, −20°) e 5 pontos em latitude (−20°, −15°, −10°, −5°, 0°), resultando em **30 pontos de grade**.
+Definiu-se a área de estudo sobre o oceano Atlântico, ao longo da costa nordeste e leste do Brasil, numa faixa de 20° de latitude por 25° de longitude. Sobre essa área foi criada uma malha regular com pontos espaçados de 5° em 5°, formando uma grade de 6 colunas × 5 linhas = **30 pontos** onde os dados de satélite serão processados.
 
-Para os exercícios 4 e 5 foram selecionados dois pontos geográficos representativos:
+Para a análise comparativa dos Exercícios 4 e 5 foram escolhidos dois pontos específicos dentro da grade:
 
-| Ponto | Longitude | Latitude | Característica |
-|---|---|---|---|
-| **Pto1** (grade #9) | −35° W | −15° S | Atlântico central, longe da costa |
-| **Pto2** (grade #22) | −30° W | −5° S | Região equatorial, influência de correntes equatoriais |
+| Ponto | Localização | Por que foi escolhido |
+|---|---|---|
+| **Pto1** (ponto #9) | 35°W / 15°S | Oceano aberto, longe da costa, representa o Atlântico central |
+| **Pto2** (ponto #22) | 30°W / 5°S | Próximo ao equador, zona de ventos e correntes mais intensas |
 
-### Resultado
+### Mapa da região
 
 ![Região de estudo e grade](plots/ex1/regiao_grade.png)
 
-A grade cobre uma faixa oceânica estratégica que inclui o fluxo da Corrente do Brasil (sentido sul ao longo da costa), a Corrente Sul Equatorial (sentido oeste) e a zona de confluência equatorial. A presença de área continental (costa do Nordeste brasileiro) no canto noroeste da grade permite avaliar o comportamento dos dados próximos à costa.
+A área escolhida é interessante porque combina duas situações distintas: a porção leste (mais longe da costa) é oceano aberto, onde as correntes marinhas fluem livremente; a porção noroeste já encosta no litoral nordestino, onde o comportamento das ondas e do vento é diferente. A grade regular garante que os dados de satélite, que chegam em trajetórias oblíquas e irregulares, possam ser organizados e comparados num mesmo sistema de referência.
 
 ---
 
 ## Exercício 2 – Seleção de Dados ao Longo de Trajetórias
 
-### Metodologia
+### O que foi feito
 
-Os dados L3 *along-track* foram filtrados espacialmente para a região de estudo e temporalmente para janelas de **fevereiro** (dias 31–58 do ano) e **agosto** (dias 212–242), com buffer de ±3 dias para a interpolação ótima. Os valores anômalos foram corrigidos pelo critério de ±5 desvios padrão e falhas substituídas pela média local.
+Os satélites não ficam parados — eles cruzam o oceano em órbitas inclinadas, coletando dados numa faixa estreita abaixo de cada passagem. Para este exercício, foram selecionadas apenas as leituras que caíram dentro da nossa região de estudo, nos meses de fevereiro e agosto de 2025. Os dados com valores fora do razoável (erros de medição grosseiros) foram descartados e as falhas menores foram preenchidas com a média local.
 
-Para cada satélite e ponto de grade foi gerado um arquivo `.dat` com os dados brutos selecionados, posteriormente utilizados na interpolação ótima (Exercício 3).
-
-### Trajetórias ADT – todos os satélites
+### Cobertura ADT – todos os satélites
 
 | Fevereiro 2025 | Agosto 2025 |
 |---|---|
 | ![ADT Fevereiro](plots/ex2/trajet_adt_todos_fev2025.png) | ![ADT Agosto](plots/ex2/trajet_adt_todos_ago2025.png) |
 
-### Trajetórias ADT – por satélite
+Os mapas mostram as "trilhas" deixadas pelos 7 satélites de nível do mar ao cruzar a região em cada mês. Cada linha corresponde a uma passagem de satélite. A densidade de trilhas indica quão bem o oceano foi amostrado — quanto mais linhas, mais dados disponíveis para o processamento. Observa-se que a cobertura é boa na maior parte da região, com trilhas em direções variadas que se complementam para cobrir toda a grade.
+
+### Cobertura ADT – por satélite
 
 | Satélite | Fevereiro | Agosto |
 |---|---|---|
@@ -67,13 +67,15 @@ Para cada satélite e ponto de grade foi gerado um arquivo `.dat` com os dados b
 | S6A (Sentinel-6A) | ![](plots/ex2/trajet_adt_s6a_fev2025.png) | ![](plots/ex2/trajet_adt_s6a_ago2025.png) |
 | SWON (SWOT Nadir) | ![](plots/ex2/trajet_adt_swon_fev2025.png) | ![](plots/ex2/trajet_adt_swon_ago2025.png) |
 
-### Trajetórias SWH/WIND – todos os satélites
+Cada satélite tem sua própria órbita e padrão de cobertura. Satélites como o Jason-3 e o Sentinel-6A seguem trilhas fixas e repetidas (passam pelo mesmo lugar a cada 10 dias), criando linhas paralelas regularmente espaçadas. Já o CryoSat-2 tem órbita mais variada, preenchendo os espaços entre as trilhas dos outros. Essa diversidade de órbitas é justamente o que garante boa cobertura espacial quando somamos todas as missões.
+
+### Cobertura SWH/WIND – todos os satélites
 
 | Fevereiro 2025 | Agosto 2025 |
 |---|---|
 | ![SWH/WIND Fevereiro](plots/ex2/trajet_swh_wnd_todos_fev2025.png) | ![SWH/WIND Agosto](plots/ex2/trajet_swh_wnd_todos_ago2025.png) |
 
-### Trajetórias SWH/WIND – por satélite
+### Cobertura SWH/WIND – por satélite
 
 | Satélite | Fevereiro | Agosto |
 |---|---|---|
@@ -87,35 +89,27 @@ Para cada satélite e ponto de grade foi gerado um arquivo `.dat` com os dados b
 | S6A | ![](plots/ex2/trajet_swh_wnd_s6a_fev2025.png) | ![](plots/ex2/trajet_swh_wnd_s6a_ago2025.png) |
 | SWON | ![](plots/ex2/trajet_swh_wnd_swon_fev2025.png) | ![](plots/ex2/trajet_swh_wnd_swon_ago2025.png) |
 
-### Análise da cobertura
-
-A cobertura espacial varia conforme a missão: satélites de órbita exata repetida (Jason-3, Sentinel-6A) concentram passagens em trilhas preferenciais espaçadas de ~3°, enquanto missões de deriva (CryoSat-2, SWOT) oferecem cobertura mais homogênea. A complementaridade entre os 7 satélites ADT e 9 satélites SWH/WIND garante amostragem suficiente para a interpolação ótima em escala mensal. A região nordeste da grade (próxima ao equador) recebe cobertura mais densa por estar sobre as trilhas ascendentes e descendentes de múltiplas missões.
+Os 9 satélites de ondas e vento cobrem a mesma região mas com diferentes densidades de passagem. Note que alguns satélites têm trilhas muito concentradas em certas longitudes — isso acontece porque sua órbita tem inclinação que favorece aquele ângulo de cruzamento. A combinação de todos eles garante que nenhum canto da grade fique sem dados por mais de 2 ou 3 dias.
 
 ---
 
 ## Exercício 3 – Séries Temporais e Mapas Estatísticos Mensais
 
-### Metodologia
+### O que foi feito
 
-Os dados *along-track* de cada satélite foram interpolados para os 30 pontos de grade pela **Interpolação Ótima de Gauss-Markov**, com os parâmetros:
+Com os dados de passagem brutos (que chegam de forma irregular no espaço e no tempo), foi aplicada uma técnica de interpolação matemática — a **Interpolação Ótima de Gauss-Markov** — para calcular o valor mais provável de cada variável em cada um dos 30 pontos da grade, a cada meio dia. Isso transforma dados esparsos de satélite em séries temporais contínuas, como se houvesse uma estação de medição fixa em cada ponto.
 
-| Parâmetro | Valor | Significado |
-|---|---|---|
-| rcx, rcy | 50.000 m | Escala de decorrelação espacial |
-| rct | 2 dias | Escala de decorrelação temporal |
-| b | 3,34 / √(rcx² + rcy²) | Coeficiente da função de correlação |
+A interpolação usa apenas dados coletados dentro de 50 km de distância e 2 dias de diferença temporal de cada ponto — um raio de influência razoável para fenômenos oceânicos desta escala.
 
-A função de peso aplicada foi:
-
-$$w = \left(1 + br + \frac{(br)^2}{6} - \frac{(br)^3}{6}\right) e^{-br} \cdot e^{-2\Delta t / rct}$$
-
-onde $r$ é a distância espacial e $\Delta t$ é a diferença temporal. As séries foram interpoladas com passo de 0,5 dia. Para cada ponto e variável foram calculados: **média, desvio padrão, mínimo e máximo** ao longo do mês.
+Com as séries temporais prontas, foram calculadas quatro estatísticas para cada ponto da grade em cada mês: **média** (valor típico do mês), **desvio padrão** (quanto os valores oscilaram dia a dia), **mínimo** e **máximo** (os extremos registrados). Esses quatro mapas por variável por mês são a principal entrega do Exercício 3.
 
 ---
 
-### ADT – Topografia Dinâmica Absoluta (m)
+### ADT – Nível do Mar Absoluto (m)
 
-#### Fevereiro 2025
+> O ADT mede o quanto a superfície do oceano está acima ou abaixo de um nível de referência médio global. Valores positivos indicam que o mar está mais "empilhado" naquela região — o que acontece quando correntes marinhas convergem ou quando o vento empurra água para aquele local. Diferenças de nível do mar de poucos centímetros a algumas dezenas de centímetros são suficientes para gerar correntes oceânicas importantes.
+
+#### Fevereiro 2025 (verão austral)
 
 | Média | Desvio Padrão |
 |---|---|
@@ -125,7 +119,13 @@ onde $r$ é a distância espacial e $\Delta t$ é a diferença temporal. As sér
 |---|---|
 | ![](plots/ex3/adt_sel_dias_min_fev2025.png) | ![](plots/ex3/adt_sel_dias_max_fev2025.png) |
 
-#### Agosto 2025
+**Média — fevereiro:** O mapa de média do nível do mar em fevereiro mostra a distribuição típica do oceano Atlântico tropical no verão: o nível tende a ser um pouco mais alto no centro e leste da região, onde a água "se acumula" em função dos ventos e correntes predominantes. Próximo à costa brasileira (canto oeste da grade) os valores tendem a ser mais baixos, refletindo o escoamento das correntes para sul ao longo da costa.
+
+**Desvio padrão — fevereiro:** Este mapa revela onde o nível do mar oscilou mais ao longo do mês. Regiões com desvio alto têm o nível subindo e descendo vários centímetros ao longo dos dias — geralmente causado pela passagem de vórtices oceânicos ou variações nos ventos. Em fevereiro, o desvio costuma ser menor que em agosto, pois o verão austral tem ventos mais fracos e estáveis.
+
+**Mínimo e máximo — fevereiro:** Estes mapas mostram os instantes de maior e menor nível registrados em algum momento do mês. A diferença entre mínimo e máximo numa mesma localização indica o quanto o nível do mar pode variar em questão de dias — uma variação de 10 a 20 cm é comum e já pode ser perceptível em medições de marés.
+
+#### Agosto 2025 (inverno austral)
 
 | Média | Desvio Padrão |
 |---|---|
@@ -135,13 +135,19 @@ onde $r$ é a distância espacial e $\Delta t$ é a diferença temporal. As sér
 |---|---|
 | ![](plots/ex3/adt_sel_dias_min_ago2025.png) | ![](plots/ex3/adt_sel_dias_max_ago2025.png) |
 
-**Análise da ADT:** A topografia dinâmica absoluta reflete a circulação geostrófica de grande escala. Na região de estudo, a ADT é dominada pelo anticiclone subtropical do Atlântico Sul, com valores positivos no centro da bacia e gradientes que indicam o fluxo da Corrente do Brasil ao longo da margem continental. A comparação entre fevereiro (verão austral) e agosto (inverno austral) revela variações sazonais na intensidade das correntes, com a Corrente Sul Equatorial tipicamente mais intensa em agosto devido ao fortalecimento dos ventos alísios. O gradiente meridional de ADT indica transporte zonal mais pronunciado próximo ao equador (Pto2, lat −5°), enquanto em latitudes mais elevadas (Pto1, lat −15°) a circulação é mais complexa, com influência de meandros e vórtices de mesoescala.
+**Média — agosto:** No inverno, o padrão médio do nível do mar pode ser um pouco diferente de fevereiro. Os ventos alísios — aqueles ventos regulares que sopram de nordeste para sudoeste no Atlântico tropical — ficam mais intensos no inverno austral e empurram mais água, alterando a distribuição do nível. O contraste entre os mapas de fevereiro e agosto da média do ADT mostra exatamente essa mudança sazonal: locais que em fevereiro tinham nível mais alto podem ter nível mais baixo em agosto, e vice-versa.
+
+**Desvio padrão — agosto:** Em agosto, o desvio padrão tende a ser maior que em fevereiro — o nível do mar oscila mais de um dia para o outro. Isso ocorre porque os ventos de inverno são mais variáveis e energéticos, gerando mais movimento no oceano. Regiões onde o desvio é alto em agosto são aquelas mais sensíveis às variações atmosféricas do inverno.
+
+**Mínimo e máximo — agosto:** Os valores extremos em agosto podem ser mais intensos que os de fevereiro, tanto para cima quanto para baixo. Um mínimo muito baixo num dado ponto indica que, em pelo menos um dia de agosto, o nível caiu bastante naquela localização — possivelmente associado a um evento de vento intenso que "empurrou" a água para longe.
 
 ---
 
-### SWH – Altura Significativa de Ondas (m)
+### SWH – Altura das Ondas (m)
 
-#### Fevereiro 2025
+> A SWH (Significant Wave Height — altura significativa das ondas) é definida como a altura média do terço mais alto das ondas presentes numa área. Na prática, é o que um observador experiente descreveria como "a altura das ondas" ao olhar para o mar. Um valor de 2 m significa um mar agitado; acima de 4 m, mar muito revolto.
+
+#### Fevereiro 2025 (verão austral)
 
 | Média | Desvio Padrão |
 |---|---|
@@ -151,7 +157,15 @@ onde $r$ é a distância espacial e $\Delta t$ é a diferença temporal. As sér
 |---|---|
 | ![](plots/ex3/swh_sel_dias_min_fev2025.png) | ![](plots/ex3/swh_sel_dias_max_fev2025.png) |
 
-#### Agosto 2025
+**Média — fevereiro:** Em fevereiro (verão), as ondas na região são tipicamente mais baixas e uniformes — em torno de 1,5 a 2,5 m na maior parte da área. O mar é mais calmo porque os ventos de verão são mais fracos e porque chegam menos "ondulações de longa distância" vindas do sul nessa época do ano. As menores ondas aparecem nas latitudes mais próximas do equador (sul do mapa), onde os ventos são quase sempre suaves.
+
+**Desvio padrão — fevereiro:** O baixo desvio padrão em fevereiro confirma que as ondas foram bastante estáveis ao longo do mês — sem grandes surpresas. Dias mais agitados e mais calmos não diferiram muito entre si. Regiões com desvio ligeiramente maior podem ter recebido alguma ondulação de tempestades distantes.
+
+**Mínimo — fevereiro:** O mapa de mínimo mostra os dias mais calmos do mês. Valores muito baixos (abaixo de 1 m) indicam dias praticamente sem ondas — condições ideais para navegação de pequenas embarcações. Esses dias calmos são mais comuns em fevereiro do que em agosto.
+
+**Máximo — fevereiro:** Mesmo no verão, pode haver dias com ondas mais altas, associados a frentes frias passageiras ou ventos locais mais intensos. O mapa de máximo mostra que mesmo em fevereiro algumas localidades chegam a ter ondas de 3 a 4 m em dias específicos.
+
+#### Agosto 2025 (inverno austral)
 
 | Média | Desvio Padrão |
 |---|---|
@@ -161,13 +175,21 @@ onde $r$ é a distância espacial e $\Delta t$ é a diferença temporal. As sér
 |---|---|
 | ![](plots/ex3/swh_sel_dias_min_ago2025.png) | ![](plots/ex3/swh_sel_dias_max_ago2025.png) |
 
-**Análise da SWH:** O padrão de altura significativa de ondas evidencia claramente o contraste sazonal. Em agosto (inverno austral), a SWH média é significativamente maior, reflexo da propagação de swell oriundo de sistemas frontais extratropicais do Atlântico Sul. Em fevereiro, o campo de ondas é mais calmo e homogêneo, dominado por ondas de vento local associadas aos alísios. O gradiente latitudinal é pronunciado em agosto, com ondas maiores nas latitudes mais ao sul da região. O desvio padrão elevado em agosto indica maior variabilidade temporal, associada à passagem intermitente de sistemas de swell.
+**Média — agosto:** O contraste com fevereiro é imediato e marcante. Em agosto (inverno austral), as ondas médias na região são consideravelmente maiores — podendo chegar a 3 a 4 m nas porções sul da grade (mais próximas de lat −20°). O motivo é duplo: os ventos locais sopram mais forte no inverno, e tempestades que se formam no sul do oceano Atlântico (abaixo de 40°S) geram ondulações de longa distância — chamadas de "swell" — que viajam centenas ou milhares de quilômetros até chegar à nossa região. É como o mar do Rio de Janeiro ficar agitado por causa de uma tempestade em alto mar ao sul da Argentina.
+
+**Desvio padrão — agosto:** O desvio padrão elevado em agosto reflete que o mar é muito mais variável de um dia para o outro. Um dia pode ter ondas de 2 m e três dias depois podem chegar a 5 m, quando passa uma ondulação forte. Essa irregularidade é característica do inverno no Atlântico Sul tropical.
+
+**Mínimo — agosto:** Mesmo em agosto há dias de relativa calmaria entre a chegada de ondulações sucessivas. O mapa de mínimo mostra esses "janelas de mar mais calmo", mas os valores mínimos de agosto ainda tendem a ser maiores que os mínimos de fevereiro — o inverno nunca é tão calmo quanto o verão nesta região.
+
+**Máximo — agosto:** Este é o mapa mais impressionante. Em alguns dias de agosto, certas localidades da grade podem registrar ondas acima de 5 a 6 m — condições de mar muito perigoso para embarcações de pequeno e médio porte. Esses picos coincidem com a chegada de swell de sistemas de baixa pressão intensos no sul do oceano. O mapa mostra claramente que os maiores valores ocorrem nas porções mais ao sul da região (lat −20°), que são as primeiras a receber as ondulações vindas de sul.
 
 ---
 
 ### WIND – Velocidade do Vento (m/s)
 
-#### Fevereiro 2025
+> A velocidade do vento medida pelo satélite é a velocidade sobre a superfície do mar, a cerca de 10 metros de altura. Para referência: ventos de 5 m/s são uma brisa fresca; 10 m/s é vento forte que já faz ondas; 15 m/s ou mais é tempestade.
+
+#### Fevereiro 2025 (verão austral)
 
 | Média | Desvio Padrão |
 |---|---|
@@ -177,7 +199,15 @@ onde $r$ é a distância espacial e $\Delta t$ é a diferença temporal. As sér
 |---|---|
 | ![](plots/ex3/wnd_sel_dias_min_fev2025.png) | ![](plots/ex3/wnd_sel_dias_max_fev2025.png) |
 
-#### Agosto 2025
+**Média — fevereiro:** Em fevereiro, os ventos médios na região ficam em torno de 5 a 8 m/s — equivalente a uma brisa marinha moderada. Esses são os ventos alísios, que sopram de forma relativamente regular do nordeste em direção ao sudoeste nessa época do ano. O padrão espacial mostra ventos um pouco mais fortes na porção leste e central da grade (mais longe da costa), onde não há barreiras terrestres para frear o vento.
+
+**Desvio padrão — fevereiro:** O baixo desvio padrão em fevereiro confirma que os ventos foram relativamente constantes ao longo do mês — característica dos ventos alísios de verão, que têm esse nome justamente por serem regulares e previsíveis. Os marinheiros históricos dependiam desses ventos para navegar no Atlântico.
+
+**Mínimo — fevereiro:** O mapa de mínimo mostra que houve dias com ventos bem fracos (abaixo de 3 m/s) em partes da região, especialmente próximo ao equador, onde a chamada "zona de calmaria equatorial" (ou doldrums) pode reduzir os ventos quase a zero em certas épocas.
+
+**Máximo — fevereiro:** Mesmo em fevereiro, dias com ventos acima de 12 m/s podem ocorrer localmente — geralmente associados a sistemas de pressão passageiros. Esses dias de vento forte são responsáveis pelos picos de altura de onda que aparecem no mapa de máximo da SWH.
+
+#### Agosto 2025 (inverno austral)
 
 | Média | Desvio Padrão |
 |---|---|
@@ -187,16 +217,23 @@ onde $r$ é a distância espacial e $\Delta t$ é a diferença temporal. As sér
 |---|---|
 | ![](plots/ex3/wnd_sel_dias_min_ago2025.png) | ![](plots/ex3/wnd_sel_dias_max_ago2025.png) |
 
-**Análise do WIND:** A velocidade do vento reflete o regime dos alísios de nordeste e sudeste que dominam o Atlântico tropical e subtropical. Em agosto, os alísios de sudeste são mais intensos, explicando os valores maiores de SWH nesse período. A variabilidade espacial mostra ventos mais fortes na porção central e oriental da região. O desvio padrão indica regiões de maior variabilidade coincidentes com zonas de confluência dos sistemas atmosféricos sazonais, especialmente nas bordas da ZCIT próximo ao equador.
+**Média — agosto:** Os ventos médios de agosto são nitidamente mais fortes que os de fevereiro — podendo chegar a 8 a 12 m/s em boa parte da região. No inverno austral, o sistema de alta pressão que domina o Atlântico Sul se intensifica e os ventos alísios ficam mais vigorosos. É como se o "motor" dos ventos tropicais funcionasse em rotação mais alta no inverno. Esse aumento de vento é diretamente responsável pelo aumento das ondas observado nos mapas de SWH de agosto.
+
+**Desvio padrão — agosto:** O desvio maior em agosto indica que o vento oscila mais de um dia para o outro — há dias de calmaria relativa e dias de vento muito forte. Essa variabilidade é maior nas latitudes mais ao sul da grade (−15° a −20°S), onde a passagem de sistemas frontais atmosféricos cria alternância entre ventos intensos e períodos de acalmia.
+
+**Mínimo — agosto:** Mesmo em agosto existem dias de ventos mais fracos, geralmente entre a passagem de sistemas atmosféricos. Mas os mínimos de agosto ainda tendem a ser mais fortes que os mínimos de fevereiro — o inverno raramente é tão calmo.
+
+**Máximo — agosto:** Em agosto, os picos de vento podem ultrapassar 15 m/s em alguns pontos da grade — condições de vento forte a tempestuoso, que já impõem restrições à navegação. Esses máximos costumam aparecer no sul da região e coincidir exatamente com os máximos de altura de onda, confirmando a relação direta entre vento e mar.
 
 ---
 
-## Exercício 4 – Análise Comparativa nos Pontos Selecionados
+## Exercício 4 – Análise Comparativa nos Dois Pontos Selecionados
 
-### Pontos selecionados
+### Os pontos escolhidos e por que são diferentes
 
-- **Pto1:** lon = −35°W, lat = −15°S — oceano aberto, sem influência direta de correntes de contorno
-- **Pto2:** lon = −30°W, lat = −5°S — região equatorial, próxima à zona de convergência intertropical (ZCIT) e à Corrente Sul Equatorial
+- **Pto1 (35°W / 15°S):** Está no meio do oceano Atlântico, bem afastado da costa. É uma região de oceano "aberto", onde as correntes e ventos seguem padrões de grande escala sem perturbações costeiras. Bom representante do comportamento típico do Atlântico tropical.
+
+- **Pto2 (30°W / 5°S):** Está muito mais próximo do equador. Nessa latitude, o oceano responde de forma diferente: os ventos são menos previsíveis, as correntes mudam de direção com mais frequência e há influência dos sistemas meteorológicos equatoriais. Comparar os dois pontos revela como o mesmo oceano se comporta de formas bem distintas dependendo da latitude.
 
 ### Séries temporais comparativas
 
@@ -204,45 +241,60 @@ onde $r$ é a distância espacial e $\Delta t$ é a diferença temporal. As sér
 |---|---|
 | ![](plots/ex4/series_comparativas_fev2025.png) | ![](plots/ex4/series_comparativas_ago2025.png) |
 
-**Análise das séries temporais:** As séries de ADT mostram variabilidade intrassazonal modulada por ondas de Rossby e meandros. Pto2 (−5°S) apresenta maior frequência de oscilações devido à proximidade com a dinâmica equatorial (ondas de Kelvin e Rossby equatoriais). Pto1 (−15°S) exibe sinais mais suaves, típicos da circulação geral de mesoescala do Atlântico tropical sul. Para SWH e WIND, as séries de agosto apresentam maior amplitude e variabilidade, especialmente em Pto1, mais exposto aos swells extratropicais.
+Cada gráfico mostra como o nível do mar (ADT), a altura das ondas (SWH) e o vento (WIND) variaram dia a dia nos dois pontos durante o mês inteiro. As duas linhas de cada painel (sólida para Pto1, tracejada para Pto2) permitem ver quando os pontos se comportam juntos e quando se separam.
 
-### Scatter plots e parâmetros comparativos
+**O que observar no nível do mar (ADT):** Em fevereiro, as duas séries de ADT tendem a andar mais "juntas" — sobem e descem de forma parecida — porque os sistemas de grande escala afetam toda a região simultaneamente. Em agosto, as oscilações podem ser mais independentes, especialmente em Pto2, que responde a perturbações equatoriais que não chegam a Pto1.
+
+**O que observar nas ondas (SWH):** Em agosto, a série de Pto1 claramente mostra ondas maiores que Pto2. Isso acontece porque Pto1 está mais ao sul e recebe mais diretamente as ondulações vindas de tempestades do Atlântico Sul. Em fevereiro, as séries ficam mais próximas uma da outra, com ondas baixas em ambos os pontos.
+
+**O que observar no vento (WIND):** O vento oscila mais nos dois pontos em agosto do que em fevereiro. Pto1 mostra picos de vento mais altos em agosto, enquanto Pto2 próximo ao equador pode ter períodos de vento mais fraco, alternados com rajadas.
+
+### Gráficos de espalhamento (scatter plots) e parâmetros comparativos
 
 | Fevereiro 2025 | Agosto 2025 |
 |---|---|
 | ![](plots/ex4/scatter_fev2025.png) | ![](plots/ex4/scatter_ago2025.png) |
 
-**Análise dos scatter plots:**
+Cada sub-gráfico compara duas variáveis entre si, colocando uma no eixo horizontal e outra no eixo vertical. Cada ponto no gráfico representa um instante de tempo. Se os pontos formam uma linha diagonal (tendência), significa que as duas variáveis sobem e descem juntas — ou seja, estão correlacionadas. Quanto mais os pontos se dispersam, mais fracas são as relações.
 
-**ADT × SWH:** A relação entre topografia dinâmica e altura de ondas tende a ser fraca ou levemente negativa — centros de alta pressão atmosférica (ADT elevada) geralmente coincidem com ventos e ondas menores. Essa anticorrelação é mais evidente em agosto, quando os padrões atmosférico-oceânicos são mais estruturados.
+**Nível do mar × Ondas (ADT × SWH):** Espera-se que essa relação seja fraca ou levemente negativa. Por quê? Quando o nível do mar está mais alto numa região, geralmente é porque ali há um "morro de água" associado a um centro de alta pressão atmosférica — e justamente nesses locais o vento é fraco, gerando ondas menores. Ou seja, mar alto (ADT positivo) tende a coincidir com ondas pequenas.
 
-**ADT × WIND:** Fisicamente coerente com ADT-SWH: em regiões de alta pressão (ADT positiva), os ventos tendem a ser menores. A significância estatística (p-valor) avalia se essa relação é robusta além da variabilidade aleatória.
+**Nível do mar × Vento (ADT × WIND):** Pela mesma razão, a relação entre nível do mar e velocidade do vento também tende a ser fraca ou negativa. Regiões com nível mais elevado geralmente correspondem a situações de ventos mais fracos.
 
-**SWH × WIND:** Esta é a relação física mais direta: ventos mais intensos geram ondas maiores. Espera-se correlação positiva com r elevado, especialmente em Pto1, onde o regime de ondas é mais controlado pelo vento local. Em Pto2, o swell remoto pode reduzir a correlação instantânea vento-onda.
+**Ondas × Vento (SWH × WIND):** Esta é a relação mais clara e direta de todas. Ventos fortes criam ondas grandes — essa é uma lei física bem estabelecida. O gráfico de espalhamento deve mostrar uma correlação positiva clara: quanto mais forte o vento, maiores as ondas. Essa relação é mais nítida em Pto1 (mais ao sul) e em agosto (quando os ventos são mais intensos).
 
-### Correlações cruzadas com atrasos
+### Correlações cruzadas com atrasos temporais
 
 | Fevereiro 2025 | Agosto 2025 |
 |---|---|
 | ![](plots/ex4/xcorr_fev2025.png) | ![](plots/ex4/xcorr_ago2025.png) |
 
-**Análise das correlações cruzadas:** A função de correlação cruzada SWH-WIND com pico em atraso positivo (WIND antecedendo SWH por 0,5–2 dias) confirma a geração local de ondas pelo vento. Para ADT-SWH e ADT-WIND, atrasos mais longos (3–7 dias) poderiam indicar a modulação de baixa frequência da ADT associada a redistribuições de massa. A assimetria das funções de correlação cruzada é indicativa da direção do forçamento dominante: se o pico ocorre em lag negativo, significa que a variável Y antecede X; se em lag positivo, X antecede Y.
+Este tipo de análise responde a uma pergunta importante: **quando o vento aumenta hoje, quanto tempo leva para as ondas crescerem?** A correlação cruzada com atraso faz exatamente isso — testa a correlação entre as duas variáveis com uma delas deslocada no tempo em relação à outra.
+
+**Como ler o gráfico:** O eixo horizontal mostra o "atraso" em dias (negativo = variável Y acontece antes de X; positivo = X acontece antes de Y). O eixo vertical mostra quão forte é a correlação naquele atraso. Um pico fora do centro indica que há uma relação de causa e efeito com aquele atraso.
+
+**Vento → Ondas:** O pico de correlação entre vento e ondas deve aparecer com atraso de 0,5 a 2 dias — o vento precede as ondas em algumas horas a um dia. Isso é fisicamente lógico: o vento sopra, a superfície do mar começa a ondular, e levam algumas horas para as ondas se desenvolverem completamente.
+
+**Nível do mar e ondas/vento:** Aqui o atraso, se houver, tende a ser maior (vários dias a semanas), pois o nível do mar muda muito mais lentamente — ele é um "acumulador" que responde a forçamentos atmosféricos de longo prazo, não a eventos de vento de um único dia.
 
 ---
 
 ## Exercício 5 – Análise de Correlação Espacial
 
-### Metodologia
+### O que foi feito e o que significa
 
-Para cada ponto de referência (Pto1 e Pto2) foi calculado o **coeficiente de correlação de Pearson** entre sua série temporal e as séries de todos os 30 pontos da grade, para ADT, SWH e WIND, em fevereiro e agosto. Também foram calculados a **significância estatística** (p-valor) e o **Skill Score** (Taylor, 2001):
+Para cada ponto de referência (Pto1 e Pto2), calculou-se o quanto as oscilações do nível do mar (ou das ondas, ou do vento) nesse ponto estão em sintonia com as oscilações nos demais 29 pontos da grade.
 
-$$\text{Skill} = 1 - \frac{\sum |x_2 - x_1|^2}{\sum \left(|x_2 - \overline{|x_1|}| + |x_1 - \overline{|x_1|}|\right)^2}$$
+Imagine que você gravou a temperatura dentro da sua casa e no vizinho durante um mês inteiro. Se as temperaturas sobem e descem juntas, a correlação é alta. Se são independentes, a correlação é baixa. Aqui fazemos o mesmo para o oceano: os mapas mostram se os pontos da grade "se comportam como vizinhos" em relação a Pto1 ou Pto2.
 
-Valores de NaN foram substituídos por interpolação linear entre vizinhos temporais antes do cálculo.
+Três mapas são gerados para cada combinação:
+- **Correlação:** valor de −1 a +1 (quanto maior e positivo, mais os pontos sobem e descem juntos)
+- **Significância:** indica se a correlação é "real" ou poderia ser coincidência — valores abaixo de 0,05 são considerados significativos
+- **Skill Score:** mede o quanto o comportamento de cada ponto da grade consegue "prever" o comportamento do ponto de referência — próximo de 1 é excelente, abaixo de 0 é pior que um chute
 
 ---
 
-### ADT – Correlação espacial
+### ADT – Correlação espacial do nível do mar
 
 #### Referência: Pto1 (lon=−35°, lat=−15°)
 
@@ -260,11 +312,11 @@ Valores de NaN foram substituídos por interpolação linear entre vizinhos temp
 | **Significância** | ![](plots/ex5/adt_signif_pto2_fev2025.png) | ![](plots/ex5/adt_signif_pto2_ago2025.png) |
 | **Skill Score** | ![](plots/ex5/adt_skill_pto2_fev2025.png) | ![](plots/ex5/adt_skill_pto2_ago2025.png) |
 
-**Análise:** A escala de decorrelação espacial da ADT é tipicamente da ordem de centenas de quilômetros no Atlântico tropical. Pto1 (mesoescala) deve apresentar escala de decorrelação menor que Pto2 (dinâmica equatorial de grande escala). A significância (p < 0,05 = correlação robusta) delimita a área de influência real de cada ponto. O Skill Score acompanha o padrão de correlação mas é mais sensível a diferenças de variância entre séries.
+**Análise:** O nível do mar tende a variar de forma coordenada em distâncias de algumas centenas de quilômetros — uma região de alta correlação ao redor de Pto1 ou Pto2 significa que, quando o nível sobe naquele ponto, sobe também nos pontos vizinhos. Quanto maior a "mancha" de cores quentes no mapa de correlação, mais ampla é a área que se move em sintonia. Pto2, por estar mais próximo do equador, tende a ter correlação elevada em distâncias maiores porque os fenômenos equatoriais (como ondas marinhas que viajam ao longo do equador) afetam grandes extensões simultaneamente. Em agosto, a correlação pode ser um pouco diferente de fevereiro porque os ventos mais intensos criam padrões de circulação diferentes. A significância estatística (mapa central) delimita as regiões onde essa correlação é genuína e não apenas acaso.
 
 ---
 
-### SWH – Correlação espacial
+### SWH – Correlação espacial da altura das ondas
 
 #### Referência: Pto1 (lon=−35°, lat=−15°)
 
@@ -282,11 +334,11 @@ Valores de NaN foram substituídos por interpolação linear entre vizinhos temp
 | **Significância** | ![](plots/ex5/swh_signif_pto2_fev2025.png) | ![](plots/ex5/swh_signif_pto2_ago2025.png) |
 | **Skill Score** | ![](plots/ex5/swh_skill_pto2_fev2025.png) | ![](plots/ex5/swh_skill_pto2_ago2025.png) |
 
-**Análise:** A SWH apresenta escalas de correlação maiores que a ADT, pois os campos de ondas são forçados por sistemas atmosféricos de grande escala e se propagam como swell por longas distâncias. Em agosto, com swell extratropical dominante, espera-se correlação elevada em toda a região para Pto1. A propagação preferencial do swell (sudoeste → nordeste) cria padrões de correlação anisotrópicos, com maior correlação ao longo da direção de propagação.
+**Análise:** As ondas viajam pelo oceano a velocidades de dezenas a centenas de quilômetros por dia. Por isso, quando uma ondulação forte chega à nossa região, ela afeta vários pontos da grade quase ao mesmo tempo — o que cria correlações espaciais muito altas e abrangendo grandes áreas. Em agosto, quando o swell vindo do sul chega à região, toda a faixa sul da grade experimenta ondas grandes no mesmo período: a correlação entre Pto1 e seus vizinhos deve ser muito elevada. O padrão pode ser assimétrico — maior correlação na direção de onde vêm as ondas (de sudoeste) do que na direção oposta. Isso porque a ondulação viaja numa direção preferencial, chegando primeiro em alguns pontos que em outros.
 
 ---
 
-### WIND – Correlação espacial
+### WIND – Correlação espacial do vento
 
 #### Referência: Pto1 (lon=−35°, lat=−15°)
 
@@ -304,48 +356,47 @@ Valores de NaN foram substituídos por interpolação linear entre vizinhos temp
 | **Significância** | ![](plots/ex5/wnd_signif_pto2_fev2025.png) | ![](plots/ex5/wnd_signif_pto2_ago2025.png) |
 | **Skill Score** | ![](plots/ex5/wnd_skill_pto2_fev2025.png) | ![](plots/ex5/wnd_skill_pto2_ago2025.png) |
 
-**Análise:** O campo de vento apresenta as maiores escalas de correlação espacial das três variáveis, pois os sistemas atmosféricos de grande escala (anticiclone subtropical, alísios) modulam simultaneamente amplas regiões. Em agosto, com alísios intensos e coerentes, a correlação deve ser elevada em toda a região para ambos os pontos. A diferença entre Pto1 (sob influência do anticiclone subtropical) e Pto2 (próximo à ZCIT, com ventos variáveis) como referência deve refletir a transição entre os regimes de vento tropical e equatorial.
+**Análise:** O vento apresenta as maiores áreas de correlação espacial das três variáveis. Isso faz sentido: um sistema de ventos alísios cobre milhares de quilômetros e afeta toda a região ao mesmo tempo — quando sopra mais forte em Pto1, sopra mais forte em quase toda a grade simultaneamente. Os mapas de correlação do vento devem mostrar cores quentes (correlação alta) praticamente em toda a região, especialmente em agosto, quando os ventos são mais organizados e persistentes. Em Pto2, próximo ao equador, a correlação com o resto da grade pode ser um pouco menor porque os ventos equatoriais são mais imprevisíveis — às vezes desconectados do padrão geral que domina as latitudes mais ao sul.
 
 ---
 
 ## Discussão Geral
 
-### Variabilidade sazonal
+### Resumo das diferenças entre verão e inverno
 
-A comparação fevereiro × agosto 2025 evidencia os contrastes sazonais do Atlântico Sul equatorial:
+A comparação entre fevereiro (verão) e agosto (inverno) de 2025 mostra com clareza que o oceano e a atmosfera sobre o Atlântico tropical sul têm comportamentos bem distintos nas duas estações:
 
-- **ADT:** Variações de 10–20 cm entre verão e inverno austrais, refletindo ajustes da circulação geostrófica associados ao ciclo dos alísios.
-- **SWH:** Contraste marcante: agosto apresenta ondas 30–50% maiores que fevereiro, com maior variabilidade temporal decorrente da propagação de swell extratropical.
-- **WIND:** Alísios mais intensos em agosto, coerente com o fortalecimento do anticiclone subtropical do Atlântico Sul no inverno austral.
+| O que muda | Verão (fevereiro) | Inverno (agosto) |
+|---|---|---|
+| **Nível do mar** | Variações moderadas, mar mais estável | Variações maiores, padrão de circulação mais intenso |
+| **Altura das ondas** | Mar calmo, ondas de 1,5–2,5 m | Mar agitado, ondas de 2,5–4 m ou mais |
+| **Velocidade do vento** | Ventos suaves, 5–8 m/s | Ventos mais fortes, 8–12 m/s |
+| **Variabilidade dia a dia** | Baixa — dia a dia relativamente parecido | Alta — dias calmos e dias agitados alternados |
 
-### Relações entre variáveis
+### Como as três variáveis se relacionam
 
-A análise integrada de ADT, SWH e WIND nos dois pontos confirma a coerência física do sistema oceano-atmosfera:
+A análise conjunta de nível do mar, ondas e vento mostra que as três variáveis formam um sistema conectado, mas com diferentes graus de relação:
 
-1. **Vento → Ondas (τ ≈ 0–2 dias):** A correlação cruzada SWH-WIND com pico em atraso positivo indica que o vento precede a geração de ondas locais, com tempo de resposta físico coerente para o Atlântico tropical.
+**Vento cria ondas** — a relação mais direta observada. Os gráficos de espalhamento e as correlações cruzadas confirmam que o aumento do vento precede o aumento das ondas em poucas horas a um dia. É como soprar na superfície de um copo d'água: quanto mais forte você sopra, maiores ficam as ondulações.
 
-2. **ADT e campo de ondas (relação indireta):** A fraca correlação entre ADT e SWH/WIND é esperada — a topografia dinâmica responde a forçamentos de baixa frequência (meses), enquanto ondas e vento variam em escala de dias.
+**Nível do mar muda mais lentamente** — o ADT não responde ao vento do dia, mas ao efeito acumulado dos ventos ao longo de semanas e meses. Por isso, a correlação entre ADT e as ondas ou vento tende a ser fraca quando se olha dia a dia. O nível do mar é como a temperatura de um lago: muda devagar, ao contrário da temperatura do ar que varia muito de um dia para o outro.
 
-3. **Pto1 vs. Pto2:** Pto2 (−5°S) está sob influência da dinâmica equatorial, com maior variabilidade intrassazonal da ADT. Pto1 (−15°S) apresenta variabilidade de mesoescala dominada por vórtices e meandros.
-
-### Desempenho da interpolação ótima
-
-A interpolação ótima de Gauss-Markov com rcx = rcy = 50 km e rct = 2 dias produziu campos suavizados, consistentes com as escalas de variabilidade observadas. O uso de múltiplas missões simultâneas (7 satélites ADT, 9 SWH/WIND) garantiu cobertura suficiente em toda a grade para os dois meses processados.
+**Pto1 e Pto2 são diferentes** — o ponto equatorial (Pto2) tem comportamento mais variável e menos previsível no nível do mar, enquanto Pto1 (mais ao sul) é mais dominado pela chegada de ondulações vindas de tempestades distantes no sul do oceano. Essa diferença ficou clara tanto nos gráficos de séries temporais quanto nos mapas de correlação espacial.
 
 ---
 
 ## Metodologia Computacional
 
-O processamento foi implementado integralmente em MATLAB no script `altim_L2_adriano_caversan.m`, seguindo os algoritmos ensinados em aula:
+O processamento foi feito integralmente em MATLAB no script `altim_L2_adriano_caversan.m`, seguindo os programas ensinados em aula:
 
-| Etapa | Referência (aula) | Exercício |
+| Etapa | Programa de referência | Exercício |
 |---|---|---|
 | Seleção along-track | prog01process_tracks | Exercício 2 |
-| Interpolação OI | prog02form_ser_temp | Exercício 3 |
+| Interpolação ótima | prog02form_ser_temp | Exercício 3 |
 | Estatísticas e gráficos por ponto | prog03estatist_ptos_grid | Exercício 3 |
 | Mapas 2D de estatísticas | prog04plot_2D | Exercício 3 |
 | Correlação espacial + Skill | prog05correl | Exercício 5 |
-| Interpolação de NaN por vizinhos | prog_10_swh_process_pto | Exercícios 3–5 |
+| Preenchimento de NaN por vizinhos | prog_10_swh_process_pto | Exercícios 3–5 |
 
 ---
 
